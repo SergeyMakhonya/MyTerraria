@@ -205,6 +205,28 @@ namespace MyTerraria.NPC
         public override void UpdateNPC()
         {
             updateMovement();
+
+            var mousePos = Mouse.GetPosition(Program.Window);
+            var tile = world.GetTileByWorldPos(mousePos);
+            if (tile != null)
+            {
+                FloatRect tileRect = tile.GetFloatRect();
+                DebugRender.AddRectangle(tileRect, Color.Green);
+
+                if (Mouse.IsButtonPressed(Mouse.Button.Left))
+                {
+                    int i = (int)(mousePos.X / Tile.TILE_SIZE);
+                    int j = (int)(mousePos.Y / Tile.TILE_SIZE);
+                    world.SetTile(TileType.NONE, i, j);
+                }
+            }
+
+            if (Mouse.IsButtonPressed(Mouse.Button.Right))
+            {
+                int i = (int)(mousePos.X / Tile.TILE_SIZE);
+                int j = (int)(mousePos.Y / Tile.TILE_SIZE);
+                world.SetTile(TileType.GROUND, i, j);
+            }
         }
 
         private void updateMovement()

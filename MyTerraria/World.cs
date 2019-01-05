@@ -43,18 +43,34 @@ namespace MyTerraria
         }
 
         // Установить плитку
-        public void SetTile(TileType type, int x, int y)
+        public void SetTile(TileType type, int i, int j)
         {
-            var chunk = GetChunk(x, y);
-            var tilePos = GetTilePosFromChunk(x, y);    // Получаем позицию плитки в массиве чанка
+            var chunk = GetChunk(i, j);
+            var tilePos = GetTilePosFromChunk(i, j);    // Получаем позицию плитки в массиве чанка
 
             // Находим соседей
-            Tile upTile = GetTile(x, y - 1);     // Верхний сосед
-            Tile downTile = GetTile(x, y + 1);   // Нижний сосед
-            Tile leftTile = GetTile(x - 1, y);   // Левый сосед
-            Tile rightTile = GetTile(x + 1, y);  // Правый сосед
+            Tile upTile = GetTile(i, j - 1);     // Верхний сосед
+            Tile downTile = GetTile(i, j + 1);   // Нижний сосед
+            Tile leftTile = GetTile(i - 1, j);   // Левый сосед
+            Tile rightTile = GetTile(i + 1, j);  // Правый сосед
 
             chunk.SetTile(type, tilePos.X, tilePos.Y, upTile, downTile, leftTile, rightTile);
+        }
+
+        // Получить плитку по мировым координатам
+        public Tile GetTileByWorldPos(float x, float y)
+        {
+            int i = (int)(x / Tile.TILE_SIZE);
+            int j = (int)(y / Tile.TILE_SIZE);
+            return GetTile(i, j);
+        }
+        public Tile GetTileByWorldPos(Vector2f pos)
+        {
+            return GetTileByWorldPos(pos.X, pos.Y);
+        }
+        public Tile GetTileByWorldPos(Vector2i pos)
+        {
+            return GetTileByWorldPos(pos.X, pos.Y);
         }
 
         // Получить плитку

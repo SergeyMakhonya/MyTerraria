@@ -26,10 +26,23 @@ namespace MyTerraria
         }
 
         // Установить плитку в чанке
-        public void SetTile(TileType type, int x, int y, Tile upTile, Tile downTile, Tile leftTile, Tile rightTile)
+        public void SetTile(TileType type, int i, int j, Tile upTile, Tile downTile, Tile leftTile, Tile rightTile)
         {
-            tiles[x][y] = new Tile(type, upTile, downTile, leftTile, rightTile);
-            tiles[x][y].Position = new Vector2f(x * Tile.TILE_SIZE, y * Tile.TILE_SIZE) + Position;
+            if (type != TileType.NONE)
+            {
+                tiles[i][j] = new Tile(type, upTile, downTile, leftTile, rightTile);
+                tiles[i][j].Position = new Vector2f(i * Tile.TILE_SIZE, j * Tile.TILE_SIZE) + Position;
+            }
+            else
+            {
+                tiles[i][j] = null;
+
+                // Присваиваем соседей, а соседям эту плитку
+                if (upTile != null) upTile.DownTile = null;
+                if (downTile != null) downTile.UpTile = null;
+                if (leftTile != null) leftTile.RightTile = null;
+                if (rightTile != null) rightTile.LeftTile = null;
+            }
         }
 
         // Получить плитку из чанка
