@@ -60,7 +60,7 @@ namespace MyTerraria.NPC
 
         public virtual Vector2f GetJumpVelocity()
         {
-            return new Vector2f(Direction * Program.Rand.Next(1, 15), -Program.Rand.Next(8, 15));
+            return new Vector2f(Direction * World.Rand.Next(1, 15), -World.Rand.Next(8, 15));
         }
     }
 }

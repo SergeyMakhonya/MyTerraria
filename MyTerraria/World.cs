@@ -1,60 +1,112 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using System;
 
 namespace MyTerraria
 {
     class World : Transformable, Drawable
     {
-        // Кол-во чанков по ширине и высоте
-        public const int WORLD_SIZE = 5;
+        // Кол-во плиток по ширине и высоте
+        public const int WORLD_WIDTH = 300;
+        public const int WORLD_HEIGHT = 100;
 
-        // Чанки
-        Chunk[][] chunks;
+        public static Random Rand { private set; get; }
+
+        // Плитки
+        Tile[,] tiles;
 
         // Конструктор класса
         public World()
         {
-            chunks = new Chunk[WORLD_SIZE][];
-
-            for (int i = 0; i < WORLD_SIZE; i++)
-                chunks[i] = new Chunk[WORLD_SIZE];
+            tiles = new Tile[WORLD_WIDTH, WORLD_HEIGHT];
         }
 
         // Генерируем новый мир
-        public void GenerateWorld()
+        public void GenerateWorld(int seed = -1)
         {
-            // Трава
-            for (int x = 3; x <= 46; x++)
-                for (int y = 17; y <= 17; y++)
-                    SetTile(TileType.GRASS, x, y);
+            Rand = seed >= 0 ? new Random(seed) : new Random((int)DateTime.Now.Ticks);
 
-            // Почва
-            for (int x = 3; x <= 46; x++)
-                for (int y = 18; y <= 32; y++)
-                    SetTile(TileType.GROUND, x, y);
+            int groundLevelMax = Rand.Next(10, 20);
+            int groundLevelMin = groundLevelMax + Rand.Next(10, 20);
 
-            for (int x = 3; x <= 4; x++)
-                for (int y = 1; y <= 17; y++)
-                    SetTile(TileType.GROUND, x, y);
+            // Генерация уровня ландшафта
+            int[] arr = new int[WORLD_WIDTH];
+            for (int i = 0; i < WORLD_WIDTH; i++)
+            {
+                int dir = Rand.Next(0, 2) == 1 ? 1 : -1;
 
-            for (int x = 45; x <= 46; x++)
-                for (int y = 1; y <= 17; y++)
-                    SetTile(TileType.GROUND, x, y);
+                if (i > 0)
+                {
+                    if (arr[i - 1] + dir < groundLevelMax || arr[i - 1] + dir > groundLevelMin)
+                        dir = -dir;
+
+                    arr[i] = arr[i - 1] + dir;
+                }
+                else
+                    arr[i] = groundLevelMin;
+            }
+
+            // Сглаживание
+            for (int i = 1; i < WORLD_WIDTH - 1; i++)
+            {
+                float sum = arr[i];
+                int count = 1;
+                for (int k = 1; k <= 5; k++)
+                {
+                    int i1 = i - k;
+                    int i2 = i + k;
+
+                    if (i1 > 0)
+                    {
+                        sum += arr[i1];
+                        count++;
+                    }
+
+                    if (i2 < WORLD_WIDTH)
+                    {
+                        sum += arr[i2];
+                        count++;
+                    }
+                }
+
+                arr[i] = (int)(sum / count);
+            }
+
+                // Ставим плитки на карту
+            for (int i = 0; i < WORLD_WIDTH; i++)
+            {
+                SetTile(TileType.GRASS, i, arr[i]);
+
+                for (int j = arr[i] + 1; j < WORLD_HEIGHT; j++)
+                    SetTile(TileType.GROUND, i, j);
+            }
         }
 
         // Установить плитку
         public void SetTile(TileType type, int i, int j)
         {
-            var chunk = GetChunk(i, j);
-            var tilePos = GetTilePosFromChunk(i, j);    // Получаем позицию плитки в массиве чанка
-
             // Находим соседей
             Tile upTile = GetTile(i, j - 1);     // Верхний сосед
             Tile downTile = GetTile(i, j + 1);   // Нижний сосед
             Tile leftTile = GetTile(i - 1, j);   // Левый сосед
             Tile rightTile = GetTile(i + 1, j);  // Правый сосед
 
-            chunk.SetTile(type, tilePos.X, tilePos.Y, upTile, downTile, leftTile, rightTile);
+            if (type != TileType.NONE)
+            {
+                var tile = new Tile(type, upTile, downTile, leftTile, rightTile);
+                tile.Position = new Vector2f(i * Tile.TILE_SIZE, j * Tile.TILE_SIZE) + Position;
+                tiles[i, j] = tile;
+            }
+            else
+            {
+                tiles[i, j] = null;
+
+                // Присваиваем соседей, а соседям эту плитку
+                if (upTile != null) upTile.DownTile = null;
+                if (downTile != null) downTile.UpTile = null;
+                if (leftTile != null) leftTile.RightTile = null;
+                if (rightTile != null) rightTile.LeftTile = null;
+            }
         }
 
         // Получить плитку по мировым координатам
@@ -74,58 +126,24 @@ namespace MyTerraria
         }
 
         // Получить плитку
-        public Tile GetTile(int x, int y)
+        public Tile GetTile(int i, int j)
         {
-            var chunk = GetChunk(x, y);
-            if (chunk == null)  // Если чанк неопределён
-                return null;    // то возвращаем null
-
-            // Получаем позицию плитки в массиве чанка
-            var tilePos = GetTilePosFromChunk(x, y);
-
-            // Возвращаем плитку даже если она ровна null
-            return chunk.GetTile(tilePos.X, tilePos.Y);
-        }
-
-        // Получить чанк
-        public Chunk GetChunk(int x, int y)
-        {
-            int X = x / Chunk.CHUNK_SIZE;
-            int Y = y / Chunk.CHUNK_SIZE;
-
-            if (X >= WORLD_SIZE || Y >= WORLD_SIZE || X < 0 || Y < 0)
-            {
+            if (i >= 0 && j >= 0 && i < WORLD_WIDTH && j < WORLD_HEIGHT)
+                return tiles[i, j];
+            else
                 return null;
-            }
-
-            if (chunks[X][Y] == null)
-            {
-                chunks[X][Y] = new Chunk(new Vector2i(X, Y));
-            }
-
-            return chunks[X][Y];
-        }
-
-        // Получить позицию плитки внутри чанка
-        public Vector2i GetTilePosFromChunk(int x, int y)
-        {
-            int X = x / Chunk.CHUNK_SIZE;
-            int Y = y / Chunk.CHUNK_SIZE;
-
-            return new Vector2i(x - X * Chunk.CHUNK_SIZE, y - Y * Chunk.CHUNK_SIZE);
         }
 
         // Нарисовать мир
         public void Draw(RenderTarget target, RenderStates states)
         {
             // Рисуем чанки
-            for (int x = 0; x < WORLD_SIZE; x++)
+            for (int i = 0; i < Program.Window.Size.X / Tile.TILE_SIZE + 1; i++)
             {
-                for (int y = 0; y < WORLD_SIZE; y++)
+                for (int j = 0; j < Program.Window.Size.Y / Tile.TILE_SIZE + 1; j++)
                 {
-                    if (chunks[x][y] == null) continue;
-
-                    target.Draw(chunks[x][y]);
+                    if (tiles[i, j] != null)
+                        target.Draw(tiles[i, j]);
                 }
             }
         }

@@ -32,8 +32,8 @@ namespace MyTerraria
             for (int i = 0; i < 5; i++)
             {
                 var s = new NpcSlime(world);
-                s.StartPosition = new Vector2f(Program.Rand.Next(150, 600), 150);
-                s.Direction = Program.Rand.Next(0, 2) == 0 ? 1 : -1;
+                s.StartPosition = new Vector2f(World.Rand.Next(150, 600), 150);
+                s.Direction = World.Rand.Next(0, 2) == 0 ? 1 : -1;
                 s.Spawn();
                 slimes.Add(s);
             }
