@@ -1,6 +1,8 @@
-﻿using SFML.Graphics;
+﻿using MyTerraria.Items;
+using SFML.Graphics;
 using SFML.System;
 using System;
+using System.Collections.Generic;
 
 namespace MyTerraria
 {
@@ -14,6 +16,9 @@ namespace MyTerraria
 
         // Плитки
         Tile[,] tiles;
+
+        // Предметы
+        List<Item> items = new List<Item>();
 
         // Конструктор класса
         public World()
@@ -99,6 +104,14 @@ namespace MyTerraria
             }
             else
             {
+                var tile = tiles[i, j];
+                if (tile != null)
+                {
+                    var item = new ItemTile(this, tile);
+                    item.Position = tile.Position;
+                    items.Add(item);
+                }
+
                 tiles[i, j] = null;
 
                 // Присваиваем соседей, а соседям эту плитку
@@ -134,6 +147,18 @@ namespace MyTerraria
                 return null;
         }
 
+        // Обновить мир
+        public void Update()
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i].IsDestroyed)
+                    items.RemoveAt(i);
+                else
+                    items[i].Update();
+            }
+        }
+
         // Нарисовать мир
         public void Draw(RenderTarget target, RenderStates states)
         {
@@ -146,6 +171,10 @@ namespace MyTerraria
                         target.Draw(tiles[i, j]);
                 }
             }
+
+            // Рисуем вещи
+            foreach (var item in items)
+                target.Draw(item);
         }
     }
 }

@@ -17,9 +17,10 @@ namespace MyTerraria
         // Размер тайла по ширине и высоте
         public const int TILE_SIZE = 16;
 
+        public SpriteSheet SpriteSheet { get; set; }    // Набор спрайтов плитки
+
         TileType type = TileType.GROUND;    // Тип плитки
         RectangleShape rectShape;           // Прямоугольная форма плитки
-        SpriteSheet spriteSheet;            // Набор спрайтов плитки
 
         // Соседи
         Tile upTile = null;     // Верхний сосед
@@ -115,15 +116,14 @@ namespace MyTerraria
             switch (type)
             {
                 case TileType.GROUND:
-                    rectShape.Texture = Content.texTile0;   // Почва
+                    SpriteSheet = new SpriteSheet(TILE_SIZE, TILE_SIZE, false, 1, Content.texTile0);    // Почва
                     break;
                 case TileType.GRASS:
-                    rectShape.Texture = Content.texTile1;   // Земляной блок с травой
+                    SpriteSheet = new SpriteSheet(TILE_SIZE, TILE_SIZE, false, 1, Content.texTile1);    // Земляной блок с травой
                     break;
             }
 
-            // Объявляем набор спрайтов для плитки
-            spriteSheet = new SpriteSheet(TILE_SIZE, TILE_SIZE, 1);
+            rectShape.Texture = SpriteSheet.Texture;
 
             // Обновляем внешний вид плитки в зависимости от соседей
             UpdateView();
@@ -136,13 +136,13 @@ namespace MyTerraria
             if (upTile != null && downTile != null && leftTile != null && rightTile != null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(1 + i, 1);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(1 + i, 1);
             }
             // Если у плитки отсутствуют все соседи
             else if (upTile == null && downTile == null && leftTile == null && rightTile == null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(9 + i, 3);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(9 + i, 3);
             }
 
             //---------------
@@ -151,25 +151,25 @@ namespace MyTerraria
             else if (upTile == null && downTile != null && leftTile != null && rightTile != null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(1 + i, 0);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(1 + i, 0);
             }
             // Если у плитки отсутствует только нижний сосед
             else if (upTile != null && downTile == null && leftTile != null && rightTile != null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(1 + i, 2);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(1 + i, 2);
             }
             // Если у плитки отсутствует только левый сосед
             else if (upTile != null && downTile != null && leftTile == null && rightTile != null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(0, i);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(0, i);
             }
             // Если у плитки отсутствует только правый сосед
             else if (upTile != null && downTile != null && leftTile != null && rightTile == null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(4, i);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(4, i);
             }
 
             //---------------
@@ -178,25 +178,25 @@ namespace MyTerraria
             else if (upTile == null && downTile != null && leftTile == null && rightTile != null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(0 + i * 2, 3);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(0 + i * 2, 3);
             }
             // Если у плитки отсутствует только верхний и правый сосед
             else if (upTile == null && downTile != null && leftTile != null && rightTile == null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(1 + i * 2, 3);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(1 + i * 2, 3);
             }
             // Если у плитки отсутствует только нижний и левый сосед
             else if (upTile != null && downTile == null && leftTile == null && rightTile != null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(0 + i * 2, 4);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(0 + i * 2, 4);
             }
             // Если у плитки отсутствует только нижний и правый сосед
             else if (upTile != null && downTile == null && leftTile != null && rightTile == null)
             {
                 int i = World.Rand.Next(0, 3); // Случайное число от 0 до 2
-                rectShape.TextureRect = spriteSheet.GetTextureRect(1 + i * 2, 4);
+                rectShape.TextureRect = SpriteSheet.GetTextureRect(1 + i * 2, 4);
             }
         }
 

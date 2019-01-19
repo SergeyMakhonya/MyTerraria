@@ -24,5 +24,14 @@ namespace MyTerraria
         {
             return (float)Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y);
         }
+
+        // Нормализация вектора
+        public static Vector2f Normalize(Vector2f vec)
+        {
+            float len = GetDistance(vec);
+            vec.X /= len;
+            vec.Y /= len;
+            return vec;
+        }
     }
 }

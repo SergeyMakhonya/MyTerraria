@@ -6,8 +6,9 @@ namespace MyTerraria
 {
     class Game
     {
+        public Player Player { get; private set; }  // Игрок
+
         World world;    // Мир
-        Player player;  // Игрок
         NpcFastSlime slime; // Слизень
 
         // Слизни
@@ -20,9 +21,9 @@ namespace MyTerraria
             world.GenerateWorld();
 
             // Создаём игрока
-            player = new Player(world);
-            player.StartPosition = new Vector2f(300, 150);
-            player.Spawn();
+            Player = new Player(world);
+            Player.StartPosition = new Vector2f(300, 150);
+            Player.Spawn();
 
             // Создаём быстрого слизня
             slime = new NpcFastSlime(world);
@@ -45,7 +46,9 @@ namespace MyTerraria
         // Обновление логики игры
         public void Update()
         {
-            player.Update();
+            world.Update();
+
+            Player.Update();
             slime.Update();
 
             foreach (var s in slimes)
@@ -56,7 +59,7 @@ namespace MyTerraria
         public void Draw()
         {
             Program.Window.Draw(world);
-            Program.Window.Draw(player);
+            Program.Window.Draw(Player);
             Program.Window.Draw(slime);
 
             foreach (var s in slimes)

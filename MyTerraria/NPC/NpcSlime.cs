@@ -12,7 +12,7 @@ namespace MyTerraria.NPC
 
         public NpcSlime(World world) : base(world)
         {
-            spriteSheet = new SpriteSheet(1, 2, 0, (int)Content.texNpcSlime.Size.X, (int)Content.texNpcSlime.Size.Y);
+            spriteSheet = new SpriteSheet(1, 2, true, 0, Content.texNpcSlime);
 
             rect = new RectangleShape(new Vector2f(spriteSheet.SubWidth / 1.5f, spriteSheet.SubHeight / 1.5f));
             rect.Origin = new Vector2f(rect.Size.X / 2, 0);
