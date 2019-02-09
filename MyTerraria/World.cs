@@ -150,12 +150,16 @@ namespace MyTerraria
         // Обновить мир
         public void Update()
         {
-            for (int i = 0; i < items.Count; i++)
+            int i = 0;
+            while (i < items.Count)
             {
                 if (items[i].IsDestroyed)
                     items.RemoveAt(i);
                 else
+                {
                     items[i].Update();
+                    i++;
+                }
             }
         }
 

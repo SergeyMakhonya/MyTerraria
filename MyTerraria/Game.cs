@@ -1,4 +1,5 @@
 ﻿using MyTerraria.NPC;
+using MyTerraria.UI;
 using SFML.System;
 using System.Collections.Generic;
 
@@ -39,6 +40,8 @@ namespace MyTerraria
                 slimes.Add(s);
             }
 
+            UIManager.AddControl(new UIWindow());
+
             // Включаем прорисовку объектов для визуальной отладки
             DebugRender.Enabled = true;
         }
@@ -53,6 +56,10 @@ namespace MyTerraria
 
             foreach (var s in slimes)
                 s.Update();
+
+            // Обновляем UI
+            UIManager.UpdateOver();
+            UIManager.Update();
         }
 
         // Прорисовка игры
@@ -66,6 +73,9 @@ namespace MyTerraria
                 Program.Window.Draw(s);
 
             DebugRender.Draw(Program.Window);
+
+            // Рисуем UI
+            UIManager.Draw();
         }
     }
 }

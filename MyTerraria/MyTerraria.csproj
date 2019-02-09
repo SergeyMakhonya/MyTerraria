@@ -73,6 +73,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpriteSheet.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="UI\UIBase.cs" />
+    <Compile Include="UI\UIManager.cs" />
+    <Compile Include="UI\UIWindow.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>

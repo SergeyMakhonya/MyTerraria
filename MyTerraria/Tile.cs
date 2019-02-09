@@ -116,10 +116,10 @@ namespace MyTerraria
             switch (type)
             {
                 case TileType.GROUND:
-                    SpriteSheet = new SpriteSheet(TILE_SIZE, TILE_SIZE, false, 1, Content.texTile0);    // Почва
+                    SpriteSheet = Content.ssTileGround;    // Почва
                     break;
                 case TileType.GRASS:
-                    SpriteSheet = new SpriteSheet(TILE_SIZE, TILE_SIZE, false, 1, Content.texTile1);    // Земляной блок с травой
+                    SpriteSheet = Content.ssTileGrass;    // Земляной блок с травой
                     break;
             }
 

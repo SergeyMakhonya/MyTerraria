@@ -1,4 +1,5 @@
 ﻿using System;
+using MyTerraria.UI;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -31,7 +32,7 @@ namespace MyTerraria.NPC
             isRectVisible = false;
 
             // Волосы
-            asHair = new AnimSprite(Content.texPlayerHair, new SpriteSheet(1, 14, true, 0, Content.texPlayerHair));
+            asHair = new AnimSprite(Content.ssPlayerHair);
             asHair.Position = new Vector2f(0, 19);
             asHair.Color = HairColor;
             asHair.AddAnimation("idle", new Animation(
@@ -55,7 +56,7 @@ namespace MyTerraria.NPC
             ));
 
             // Голова
-            asHead = new AnimSprite(Content.texPlayerHead, new SpriteSheet(1, 20, true, 0, Content.texPlayerHead));
+            asHead = new AnimSprite(Content.ssPlayerHead);
             asHead.Position = new Vector2f(0, 19);
             asHead.Color = BodyColor;
             asHead.AddAnimation("idle", new Animation(
@@ -79,7 +80,7 @@ namespace MyTerraria.NPC
             ));
 
             // Рубашка
-            asShirt = new AnimSprite(Content.texPlayerShirt, new SpriteSheet(1, 20, true, 0, Content.texPlayerShirt));
+            asShirt = new AnimSprite(Content.ssPlayerShirt);
             asShirt.Position = new Vector2f(0, 19);
             asShirt.Color = ShirtColor;
             asShirt.AddAnimation("idle", new Animation(
@@ -103,7 +104,7 @@ namespace MyTerraria.NPC
             ));
 
             // Рукава
-            asUndershirt = new AnimSprite(Content.texPlayerUndershirt, new SpriteSheet(1, 20, true, 0, Content.texPlayerUndershirt));
+            asUndershirt = new AnimSprite(Content.ssPlayerUndershirt);
             asUndershirt.Position = new Vector2f(0, 19);
             asUndershirt.AddAnimation("idle", new Animation(
                 new AnimationFrame(0, 0, 1f)
@@ -126,7 +127,7 @@ namespace MyTerraria.NPC
             ));
 
             // Кисти
-            asHands = new AnimSprite(Content.texPlayerHands, new SpriteSheet(1, 20, true, 0, Content.texPlayerHands));
+            asHands = new AnimSprite(Content.ssPlayerHands);
             asHands.Position = new Vector2f(0, 19);
             asHands.Color = BodyColor;
             asHands.AddAnimation("idle", new Animation(
@@ -150,7 +151,7 @@ namespace MyTerraria.NPC
             ));
 
             // Ноги
-            asLegs = new AnimSprite(Content.texPlayerLegs, new SpriteSheet(1, 20, true, 0, Content.texPlayerLegs));
+            asLegs = new AnimSprite(Content.ssPlayerLegs);
             asLegs.Color = LegsColor;
             asLegs.Position = new Vector2f(0, 19);
             asLegs.AddAnimation("idle", new Animation(
@@ -174,7 +175,7 @@ namespace MyTerraria.NPC
             ));
 
             // Обувь
-            asShoes = new AnimSprite(Content.texPlayerShoes, new SpriteSheet(1, 20, true, 0, Content.texPlayerShoes));
+            asShoes = new AnimSprite(Content.ssPlayerShoes);
             asShoes.Position = new Vector2f(0, 19);
             asShoes.AddAnimation("idle", new Animation(
                 new AnimationFrame(0, 0, 1f)
@@ -206,26 +207,29 @@ namespace MyTerraria.NPC
         {
             updateMovement();
 
-            var mousePos = Mouse.GetPosition(Program.Window);
-            var tile = world.GetTileByWorldPos(mousePos);
-            if (tile != null)
+            if (UIManager.Over == null && UIManager.Drag == null)
             {
-                FloatRect tileRect = tile.GetFloatRect();
-                DebugRender.AddRectangle(tileRect, Color.Green);
+                var mousePos = Mouse.GetPosition(Program.Window);
+                var tile = world.GetTileByWorldPos(mousePos);
+                if (tile != null)
+                {
+                    FloatRect tileRect = tile.GetFloatRect();
+                    DebugRender.AddRectangle(tileRect, Color.Green);
 
-                if (Mouse.IsButtonPressed(Mouse.Button.Left))
+                    if (Mouse.IsButtonPressed(Mouse.Button.Left))
+                    {
+                        int i = (int)(mousePos.X / Tile.TILE_SIZE);
+                        int j = (int)(mousePos.Y / Tile.TILE_SIZE);
+                        world.SetTile(TileType.NONE, i, j);
+                    }
+                }
+
+                if (Mouse.IsButtonPressed(Mouse.Button.Right))
                 {
                     int i = (int)(mousePos.X / Tile.TILE_SIZE);
                     int j = (int)(mousePos.Y / Tile.TILE_SIZE);
-                    world.SetTile(TileType.NONE, i, j);
+                    world.SetTile(TileType.GROUND, i, j);
                 }
-            }
-
-            if (Mouse.IsButtonPressed(Mouse.Button.Right))
-            {
-                int i = (int)(mousePos.X / Tile.TILE_SIZE);
-                int j = (int)(mousePos.Y / Tile.TILE_SIZE);
-                world.SetTile(TileType.GROUND, i, j);
             }
         }
 

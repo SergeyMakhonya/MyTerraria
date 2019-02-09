@@ -89,13 +89,13 @@ namespace MyTerraria
         }
 
         // Конструктор
-        public AnimSprite(Texture texture, SpriteSheet ss)
+        public AnimSprite(SpriteSheet ss)
         {
             this.ss = ss;
 
             rectShape = new RectangleShape(new Vector2f(ss.SubWidth, ss.SubHeight));
             rectShape.Origin = new Vector2f(ss.SubWidth / 2, ss.SubHeight / 2);
-            rectShape.Texture = texture;
+            rectShape.Texture = ss.Texture;
         }
 
         // Добавить анимацию
