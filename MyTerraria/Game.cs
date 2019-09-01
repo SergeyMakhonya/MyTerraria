@@ -40,7 +40,10 @@ namespace MyTerraria
                 slimes.Add(s);
             }
 
-            UIManager.AddControl(new UIWindow());
+            // Создаём UI
+            Player.Invertory = new UIInvertory();
+            UIManager.AddControl(Player.Invertory);
+            //UIManager.AddControl(new UIWindow());
 
             // Включаем прорисовку объектов для визуальной отладки
             DebugRender.Enabled = true;

@@ -1,4 +1,5 @@
 ﻿using MyTerraria.NPC;
+using MyTerraria.UI;
 using SFML.System;
 using System.Collections.Generic;
 
@@ -6,10 +7,12 @@ namespace MyTerraria
 {
     class Game
     {
-        World world;    // Мир
-        Player player;  // Игрок
-        NpcSlime slime; // Слизень
+        public Player Player { get; private set; }  // Игрок
 
+        World world;    // Мир
+        NpcFastSlime slime; // Слизень
+
+        // Слизни
         List<NpcSlime> slimes = new List<NpcSlime>();
 
         public Game()
@@ -19,23 +22,27 @@ namespace MyTerraria
             world.GenerateWorld();
 
             // Создаём игрока
-            player = new Player(world);
-            player.StartPosition = new Vector2f(300, 150);
-            player.Spawn();
+            Player = new Player(world);
+            Player.StartPosition = new Vector2f(300, 150);
+            Player.Spawn();
 
-            // Создаём слизня
-            slime = new NpcSlime(world);
+            // Создаём быстрого слизня
+            slime = new NpcFastSlime(world);
             slime.StartPosition = new Vector2f(500, 150);
             slime.Spawn();
 
-            for (int i=0; i<5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var s = new NpcSlime(world);
-                s.StartPosition = new Vector2f(Program.Rand.Next(150, 600), 150);
-                s.Direction = Program.Rand.Next(0, 2) == 0 ? 1 : -1;
+                s.StartPosition = new Vector2f(World.Rand.Next(150, 600), 150);
+                s.Direction = World.Rand.Next(0, 2) == 0 ? 1 : -1;
                 s.Spawn();
                 slimes.Add(s);
             }
+
+            Player.Invertory = new UIInvertory();
+            UIManager.AddControl(Player.Invertory);
+            //UIManager.AddControl(new UIWindow());
 
             // Включаем прорисовку объектов для визуальной отладки
             DebugRender.Enabled = true;
@@ -44,24 +51,33 @@ namespace MyTerraria
         // Обновление логики игры
         public void Update()
         {
-            player.Update();
+            world.Update();
+
+            Player.Update();
             slime.Update();
 
             foreach (var s in slimes)
                 s.Update();
+
+            // Обновляем UI
+            UIManager.UpdateOver();
+            UIManager.Update();
         }
 
         // Прорисовка игры
         public void Draw()
         {
             Program.Window.Draw(world);
-            Program.Window.Draw(player);
+            Program.Window.Draw(Player);
             Program.Window.Draw(slime);
 
             foreach (var s in slimes)
                 Program.Window.Draw(s);
 
             DebugRender.Draw(Program.Window);
+
+            // Рисуем UI
+            UIManager.Draw();
         }
     }
 }

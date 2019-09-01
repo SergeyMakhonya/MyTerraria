@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using System.Collections.Generic;
 
 namespace MyTerraria.UI
 {
@@ -8,6 +9,7 @@ namespace MyTerraria.UI
     {
         public UIBase OldParent = null;                     // Предыдущий родитель до перетаскивания элемента
         public UIBase Parent = null;                        // Родитель
+        public List<UIBase> Childs = new List<UIBase>();    // Дети
 
         public new Vector2i Position
         {
@@ -79,12 +81,16 @@ namespace MyTerraria.UI
 
                 if (UIManager.Drag != this)
                     UIManager.Over = this;
+
+                for (int i = 0; i < Childs.Count; i++)
+                    Childs[i].UpdateOver(mousePos);
             }
         }
 
         public virtual void Update()
         {
-
+            foreach (var c in Childs)
+                c.Update();
         }
 
         public virtual void Draw(RenderTarget target, RenderStates states)
@@ -92,13 +98,18 @@ namespace MyTerraria.UI
             states.Transform *= Transform;
             target.Draw(rectShape, states);
 
-
+            foreach (var c in Childs)
+                if (c != UIManager.Drag)
+                    target.Draw(c, states);
         }
 
         // Когда текущий элемент начинают тащить мышкой
         public virtual void OnDragBegin()
         {
             OldParent = Parent;
+
+            if (Parent != null)
+                Parent.Childs.Remove(this);
 
             Parent = null;
         }
@@ -111,6 +122,9 @@ namespace MyTerraria.UI
         // Когда невозможно сбросить текущий элемент куда то и нужно отменить все изменения
         public virtual void OnCancelDrag()
         {
+            if (OldParent != null)
+                OldParent.Childs.Add(this);
+
             Parent = OldParent;
             Position = new Vector2i();
         }

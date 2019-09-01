@@ -62,6 +62,7 @@
     <Compile Include="DebugRender.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="InfoItem.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemTile.cs" />
     <Compile Include="MathHelper.cs" />
@@ -74,6 +75,9 @@
     <Compile Include="SpriteSheet.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="UI\UIBase.cs" />
+    <Compile Include="UI\UIInvertory.cs" />
+    <Compile Include="UI\UIInvertoryCell.cs" />
+    <Compile Include="UI\UIItemStack.cs" />
     <Compile Include="UI\UIManager.cs" />
     <Compile Include="UI\UIWindow.cs" />
     <Compile Include="World.cs" />

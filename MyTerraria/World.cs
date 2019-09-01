@@ -107,7 +107,7 @@ namespace MyTerraria
                 var tile = tiles[i, j];
                 if (tile != null)
                 {
-                    var item = new ItemTile(this, tile);
+                    var item = new ItemTile(this, InfoItem.ItemGround);
                     item.Position = tile.Position;
                     items.Add(item);
                 }

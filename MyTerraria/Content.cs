@@ -5,6 +5,7 @@ namespace MyTerraria
     class Content
     {
         public const string CONTENT_DIR = "..\\Content\\";
+        public static readonly string FONT_DIR = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Fonts) + "\\";
 
         public static SpriteSheet ssTileGround; // Ground
         public static SpriteSheet ssTileGrass; // Grass
@@ -20,6 +21,11 @@ namespace MyTerraria
         public static SpriteSheet ssPlayerHands;       // Кисти
         public static SpriteSheet ssPlayerLegs;        // Ноги
         public static SpriteSheet ssPlayerShoes;       // Обувь
+
+        // UI
+        public static Texture texUIInvertoryBack;      // Инвертарь
+
+        public static Font font;       // Шрифт
 
         public static void Load()
         {
@@ -37,6 +43,12 @@ namespace MyTerraria
             ssPlayerHands = new SpriteSheet(1, 20, true, 0, new Texture(CONTENT_DIR + "Textures\\player\\hands.png"));
             ssPlayerLegs = new SpriteSheet(1, 20, true, 0, new Texture(CONTENT_DIR + "Textures\\player\\legs.png"));
             ssPlayerShoes = new SpriteSheet(1, 20, true, 0, new Texture(CONTENT_DIR + "Textures\\player\\shoes.png"));
+
+            // UI
+            texUIInvertoryBack = new Texture(CONTENT_DIR + "Textures\\ui\\Inventory_Back.png");
+
+            // Шрифт
+            font = new Font(FONT_DIR + "brushtype.ttf");
         }
     }
 }

@@ -16,6 +16,9 @@ namespace MyTerraria.NPC
         public Color ShirtColor = new Color(255, 255, 0);  // Цвет куртки
         public Color LegsColor = new Color(0, 76, 135);  // Цвет штанов
 
+        // UI
+        public UIInvertory Invertory;
+
         // Спрайты с анимацией
         AnimSprite asHair;         // Волосы
         AnimSprite asHead;         // Голова
